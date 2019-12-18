@@ -3,16 +3,14 @@ defmodule PwFinder do
     for n <- low..high do
       pw_parser(n)
     end
-    |> Enum.filter(& &1)
-    |> length()
+    |> Enum.count(fn x -> x end)
   end
 
   def run2(low, high) do
     for n <- low..high do
       pw_parser2(n)
     end
-    |> Enum.filter(& &1)
-    |> length()
+    |> Enum.count(fn x -> x end)
   end
 
   def pw_parser(input) do
@@ -24,8 +22,8 @@ defmodule PwFinder do
   def pw_parser2(input) do
     Integer.digits(input)
     |> pair_finder()
-    |> group_finder()
     |> ascender()
+    |> group_finder()
   end
 
   def pair_finder(input) do
@@ -41,12 +39,17 @@ defmodule PwFinder do
   end
 
   def group_finder(input) do
-    list = Enum.chunk_every(input, 2, 1, :discard)
-    if list !== Enum.dedup(list) do
+    counts =
+      input
+      |> Enum.chunk_by(& &1)
+      |> Enum.map(&length/1)
+
+    if 2 in counts do
       input
     else
-      nil
+
     end
+
   end
 
   def ascender(nil) do
@@ -55,11 +58,19 @@ defmodule PwFinder do
 
   def ascender(input) do
     if input === Enum.sort(input) do
-      1
+      input
     else
 
     end
   end
 
+  # def counter(input) do
+  #   for x <- input do
+  #     Enum.count(input, )
+  #   end
+  # end
 
 end
+
+
+
